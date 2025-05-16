@@ -1,0 +1,108 @@
+import { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+
+const moodToMovies = {
+  happy: ["La La Land", "Paddington 2", "The Grand Budapest Hotel"],
+  sad: ["Eternal Sunshine of the Spotless Mind", "Blue Valentine", "The Pianist"],
+  nostalgic: ["Cinema Paradiso", "The Perks of Being a Wallflower", "Mid90s"],
+  anxious: ["Inside Out", "A Beautiful Mind", "Everything Everywhere All At Once"],
+  romantic: ["Before Sunrise", "In the Mood for Love", "Pride & Prejudice"],
+  curious: ["Arrival", "Interstellar", "The Imitation Game"],
+  growth: ["The Holdovers", "The Goldfinch", "The Edge of Seventeen"],
+  comedy: ["Pitch Perfect", "Grown Ups", "22 Jump Street"],
+  fun: ["Back to the Future", "Zootopia", "Truman Show"],
+  thriller: ["Hush", "It Follows", "Ready or Not"],
+  horror: ["Us", "LongLegs", "The Posession"]
+};
+
+const posterLinks = {
+  "La La Land": "https://m.media-amazon.com/images/I/81WojUxbbFL._AC_SL1500_.jpg",
+  "Paddington 2": "https://m.media-amazon.com/images/I/81EvxX8Jv8L._AC_SY679_.jpg",
+  "The Grand Budapest Hotel": "https://m.media-amazon.com/images/I/71La4vWi3dL._AC_SY679_.jpg",
+  "Eternal Sunshine of the Spotless Mind": "https://m.media-amazon.com/images/I/71k9kKe67JL._AC_SY679_.jpg",
+  "Blue Valentine": "https://m.media-amazon.com/images/I/81JjSxy3UzL._AC_SY679_.jpg",
+  "The Pianist": "https://m.media-amazon.com/images/I/81c1L0+rhRL._AC_SY679_.jpg",
+  "Cinema Paradiso": "https://m.media-amazon.com/images/I/81hwSYoEybL._AC_SY679_.jpg",
+  "The Perks of Being a Wallflower": "https://m.media-amazon.com/images/I/81ugKZzZLAL._AC_SY679_.jpg",
+  "Mid90s": "https://m.media-amazon.com/images/I/71QeYkaT0+L._AC_SY679_.jpg",
+  "Inside Out": "https://m.media-amazon.com/images/I/91Yf2wEcgBL._AC_SY679_.jpg",
+  "A Beautiful Mind": "https://m.media-amazon.com/images/I/91uWc2fVAdL._AC_SY679_.jpg",
+  "Everything Everywhere All At Once": "https://m.media-amazon.com/images/I/81b0JLZHeDL._AC_SY679_.jpg",
+  "Before Sunrise": "https://m.media-amazon.com/images/I/81MZcPFe9LL._AC_SY679_.jpg",
+  "In the Mood for Love": "https://m.media-amazon.com/images/I/81FwHO8tYpL._AC_SY679_.jpg",
+  "Pride & Prejudice": "https://m.media-amazon.com/images/I/81r+LNwF3lL._AC_SY679_.jpg"
+  // Add more movie posters here as needed
+};
+
+export default function FrameByFrame() {
+  const [mood, setMood] = useState("");
+  const [recommendations, setRecommendations] = useState([]);
+
+  const handleRecommend = () => {
+    const key = mood.toLowerCase();
+    if (moodToMovies[key]) {
+      setRecommendations(moodToMovies[key]);
+    } else {
+      setRecommendations(["No matches found. Try moods like happy, sad, nostalgic, etc."]);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6">
+      <motion.h1
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="text-4xl font-bold mb-6"
+      >
+        Frame by Frame 🎞️
+      </motion.h1>
+
+      <Card className="w-full max-w-md p-4 shadow-xl bg-zinc-900">
+        <CardContent className="flex flex-col space-y-4">
+          <label htmlFor="mood" className="text-lg font-medium text-white">
+            What's your mood today?
+          </label>
+          <Input
+            id="mood"
+            placeholder="e.g., happy, sad, nostalgic..."
+            value={mood}
+            onChange={(e) => setMood(e.target.value)}
+            className="bg-zinc-800 text-white placeholder-gray-400"
+          />
+          <Button onClick={handleRecommend} className="mt-2">
+            Get Recommendations
+          </Button>
+        </CardContent>
+      </Card>
+
+      <div className="mt-6 flex flex-wrap justify-center gap-6">
+        {recommendations.map((movie, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+            className="flex flex-col items-center w-36"
+          >
+            {posterLinks[movie] ? (
+              <img
+                src={posterLinks[movie]}
+                alt={`${movie} poster`}
+                className="rounded-lg shadow-md mb-2 w-full h-auto"
+              />
+            ) : (
+              <div className="w-full h-52 bg-zinc-700 rounded-lg flex items-center justify-center mb-2 text-sm text-gray-400">
+                No Poster
+              </div>
+            )}
+            <p className="text-center text-sm text-gray-300">{movie}</p>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  );
+}
